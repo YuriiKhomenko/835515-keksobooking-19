@@ -71,14 +71,8 @@ var generateSimilarHousingAds = function () {
   return similarHousingAds;
 };
 
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
-var pinList = document.querySelector('.map__pins');
-var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-//var fragment = document.createDocumentFragment();
-var similarHousingAds = generateSimilarHousingAds();
-
-var createPin = function (pin, housingAd) {
+var createPin = function (housingAd) {
+  var pin = pinTemplate.cloneNode(true);
   pin.style.left = housingAd.offer.location.x + PIN_WIDTH / 2 + 'px';
   pin.style.top = housingAd.offer.location.y + PIN_HEIGHT + 'px';
   pin.querySelector('img').src = housingAd.author.avatar;
@@ -86,3 +80,20 @@ var createPin = function (pin, housingAd) {
   return pin;
 };
 
+var showPinsOnTheMap = function (parent, pins) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < pins.length; i++) {
+    var pin = createPin(pins[i]);
+    fragment.appendChild(pin);
+  }
+  parent.appendChild(fragment);
+};
+
+var pinList = document.querySelector('.map__pins');
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var similarHousingAds = generateSimilarHousingAds();
+
+showPinsOnTheMap(pinList, similarHousingAds);
+
+var map = document.querySelector('.map');
+map.classList.remove('map--faded');
