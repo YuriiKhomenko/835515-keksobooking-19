@@ -36,10 +36,10 @@ var getRandomArrayFromArray = function (array) {
   return newArray;
 };
 
-var createHousingAd = function () {
+var createHousingAdvertisement = function () {
   var x = getRandomNumber(MIN_X, MAX_X);
   var y = getRandomNumber(MIN_Y, MAX_Y);
-  var housingAd = {
+  var housingAdvertisement = {
     'author': {
       'avatar': 'img/avatars/user0' + getRandomNumber(1, 8) + '.png',
     },
@@ -60,15 +60,15 @@ var createHousingAd = function () {
       }
     }
   };
-  return housingAd;
+  return housingAdvertisement;
 };
 
-var generateSimilarHousingAds = function () {
+var generateSimilarHousingAdvertisements = function () {
   var similarHousingAds = [];
   for (var i = 0; i < 8; i++) {
-    similarHousingAds.push(createHousingAd());
+    similarHousingAds.push(createHousingAdvertisement());
   }
-  return similarHousingAds;
+  return similarHousingAdvertisements;
 };
 
 var createPin = function (housingAd) {
@@ -91,9 +91,9 @@ var showPinsOnTheMap = function (parent, pins) {
 
 var pinList = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var similarHousingAds = generateSimilarHousingAds();
+var similarHousingAdvertisements = generateSimilarHousingAdvertisements();
 
-showPinsOnTheMap(pinList, similarHousingAds);
+showPinsOnTheMap(pinList, similarHousingAdvertisements);
 
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
