@@ -19,6 +19,11 @@ var MIN_Y = 130;
 var MAX_Y = 630;
 var PIN_WIDTH = 62;
 var PIN_HEIGHT = 84;
+var PIN_LIST = document.querySelector('.map__pins');
+var PIN_TEMPLATE = document.querySelector('#pin').content.querySelector('.map__pin');
+var CARD_TEMPLATE = document.querySelector('#card').content.querySelector('.map__card');
+var MAP = document.querySelector('.map');
+
 
 var getRandomElementFromArray = function (array) {
   return array[Math.round(Math.random() * (array.length - 1))];
@@ -66,34 +71,25 @@ var checkGuestsNumber = function (housingAdvertisement) {
   return guestsName;
 };
 
-var deleteChildrenFromParent = function (parent) {
-  var children = parent.children;
-  for (var i = children.length - 1; i >= 0; i--) {
-    parent.removeChild(children[i]);
-  }
-};
-
 var fillInFeaturesList = function (featureList, housingAdvertisement) {
+  featureList.innerHTML = '';
   var features = housingAdvertisement.offer.features;
-  var fragment = document.createDocumentFragment();
   for (var i = 0; i < features.length; i++) {
     var featureListItem = document.createElement('li');
     featureListItem.classList.add('popup__feature');
     featureListItem.classList.add('popup__feature--' + features[i]);
-    fragment.appendChild(featureListItem);
+    featureList.appendChild(featureListItem);
   }
-  featureList.appendChild(fragment);
 };
 
-var displayPhotos = function (cardPhotoTemplate, housingAdvertisement, parent) {
-  var fragment = document.createDocumentFragment();
+var displayPhotos = function (cardPhotoTemplate, housingAdvertisement, photosList) {
+  photosList.innerHTML = '';
   var housingAdvertisementPhotos = housingAdvertisement.offer.photos;
   for (var i = 0; i < housingAdvertisementPhotos.length; i++) {
     var cardImage = cardPhotoTemplate.cloneNode(false);
     cardImage.src = housingAdvertisementPhotos[i];
-    fragment.appendChild(cardImage);
+    photosList.appendChild(cardImage);
   }
-  parent.appendChild(fragment);
 };
 
 var createHousingAdvertisement = function () {
@@ -142,13 +138,11 @@ var createHousingAdvertisementCard = function (template, housingAdvertisement) {
   card.querySelector('.popup__text--time').textContent = 'Заезд после ' + housingAdvertisement.offer.checkin + ', выезд до ' + housingAdvertisement.offer.checkout;
 
   var featuresList = card.querySelector('.popup__features');
-  deleteChildrenFromParent(featuresList);
   fillInFeaturesList(featuresList, housingAdvertisement);
   card.querySelector('.popup__description').textContent = housingAdvertisement.offer.description;
 
   var cardPhotoTemplate = card.querySelector('.popup__photos img').cloneNode(false);
   var photosList = card.querySelector('.popup__photos');
-  deleteChildrenFromParent(photosList);
   displayPhotos(cardPhotoTemplate, housingAdvertisement, photosList);
 
   card.querySelector('.popup__avatar').src = housingAdvertisement.author.avatar;
@@ -165,7 +159,7 @@ var generateSimilarHousingAdvertisements = function () {
 };
 
 var createPin = function (housingAdvertisement) {
-  var pin = pinTemplate.cloneNode(true);
+  var pin = PIN_TEMPLATE.cloneNode(true);
   pin.style.left = housingAdvertisement.offer.location.x + PIN_WIDTH / 2 + 'px';
   pin.style.top = housingAdvertisement.offer.location.y + PIN_HEIGHT + 'px';
   pin.querySelector('img').src = housingAdvertisement.author.avatar;
@@ -174,22 +168,15 @@ var createPin = function (housingAdvertisement) {
 };
 
 var showPinsOnTheMap = function (parent, pins) {
-  var fragment = document.createDocumentFragment();
   for (var i = 0; i < pins.length; i++) {
     var pin = createPin(pins[i]);
-    fragment.appendChild(pin);
+    parent.appendChild(pin);
   }
-  parent.appendChild(fragment);
 };
 
-var pinList = document.querySelector('.map__pins');
-var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var similarHousingAdvertisements = generateSimilarHousingAdvertisements();
+var housingAdvertisementCard = createHousingAdvertisementCard(CARD_TEMPLATE, similarHousingAdvertisements[0]);
 
-showPinsOnTheMap(pinList, similarHousingAdvertisements);
-var housingAdvertisementCard = createHousingAdvertisementCard(cardTemplate, similarHousingAdvertisements[0]);
-pinList.appendChild(housingAdvertisementCard);
-
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
+showPinsOnTheMap(PIN_LIST, similarHousingAdvertisements);
+PIN_LIST.appendChild(housingAdvertisementCard);
+MAP.classList.remove('map--faded');
