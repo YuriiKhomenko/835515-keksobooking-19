@@ -19,10 +19,10 @@ var MIN_Y = 130;
 var MAX_Y = 630;
 var PIN_WIDTH = 62;
 var PIN_HEIGHT = 84;
-var PIN_LIST = document.querySelector('.map__pins');
-var PIN_TEMPLATE = document.querySelector('#pin').content.querySelector('.map__pin');
-var CARD_TEMPLATE = document.querySelector('#card').content.querySelector('.map__card');
-var MAP = document.querySelector('.map');
+var pinList = document.querySelector('.map__pins');
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var map = document.querySelector('.map');
 
 
 var getRandomElementFromArray = function (array) {
@@ -159,7 +159,7 @@ var generateSimilarHousingAdvertisements = function () {
 };
 
 var createPin = function (housingAdvertisement) {
-  var pin = PIN_TEMPLATE.cloneNode(true);
+  var pin = pinTemplate.cloneNode(true);
   pin.style.left = housingAdvertisement.offer.location.x + PIN_WIDTH / 2 + 'px';
   pin.style.top = housingAdvertisement.offer.location.y + PIN_HEIGHT + 'px';
   pin.querySelector('img').src = housingAdvertisement.author.avatar;
@@ -175,8 +175,8 @@ var showPinsOnTheMap = function (parent, pins) {
 };
 
 var similarHousingAdvertisements = generateSimilarHousingAdvertisements();
-var housingAdvertisementCard = createHousingAdvertisementCard(CARD_TEMPLATE, similarHousingAdvertisements[0]);
+var housingAdvertisementCard = createHousingAdvertisementCard(cardTemplate, similarHousingAdvertisements[0]);
 
-showPinsOnTheMap(PIN_LIST, similarHousingAdvertisements);
-PIN_LIST.appendChild(housingAdvertisementCard);
-MAP.classList.remove('map--faded');
+showPinsOnTheMap(pinList, similarHousingAdvertisements);
+pinList.appendChild(housingAdvertisementCard);
+map.classList.remove('map--faded');
