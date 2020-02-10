@@ -19,10 +19,15 @@ var MIN_Y = 130;
 var MAX_Y = 630;
 var PIN_WIDTH = 62;
 var PIN_HEIGHT = 84;
+var LEFT_MOUSE_BUTTON = 0;
+var ENTER_KEY = 'Enter';
 var pinList = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var map = document.querySelector('.map');
+var housingAdvertisementForm = document.querySelector('.ad-form');
+var mapFiltersForm = document.querySelector('.map__filters');
+var mainMapPin = document.querySelector('.map__pin--main');
 
 
 var getRandomElementFromArray = function (array) {
@@ -45,6 +50,27 @@ var getRandomArrayFromArray = function (array) {
     }
   }
   return newArray;
+};
+
+var disableFormElements = function (form, value) {
+  for (var i = 0; i < form.elements.length; i++) {
+    form.elements[i].disabled = value;
+  }
+};
+
+var getActiveState = function () {
+  disableFormElements(housingAdvertisementForm, false);
+  housingAdvertisementForm.classList.remove('ad-form--disabled');
+  disableFormElements(mapFiltersForm, false);
+  map.classList.remove('map--faded');
+  showPinsOnTheMap(pinList, similarHousingAdvertisements);
+  pinList.appendChild(housingAdvertisementCard);
+  console.log('HI')
+};
+
+var getNotActiveState = function () {
+  disableFormElements(housingAdvertisementForm, true);
+  disableFormElements(mapFiltersForm, true);
 };
 
 var checkRoomsNumber = function (housingAdvertisement) {
@@ -177,6 +203,19 @@ var showPinsOnTheMap = function (parent, pins) {
 var similarHousingAdvertisements = generateSimilarHousingAdvertisements();
 var housingAdvertisementCard = createHousingAdvertisementCard(cardTemplate, similarHousingAdvertisements[0]);
 
-showPinsOnTheMap(pinList, similarHousingAdvertisements);
-pinList.appendChild(housingAdvertisementCard);
-map.classList.remove('map--faded');
+getNotActiveState();
+
+var removeMainMapPinHandlers = function () {
+  mainMapPin.removeEventListener('mousedown', mainMapPinActivateHandler);
+  mainMapPin.removeEventListener('keydown', mainMapPinActivateHandler);
+};
+
+var mainMapPinActivateHandler = function (evt) {
+  if (evt.button === LEFT_MOUSE_BUTTON || evt.key === ENTER_KEY) {
+    getActiveState();
+    removeMainMapPinHandlers();
+  }
+};
+
+mainMapPin.addEventListener('mousedown', mainMapPinActivateHandler);
+mainMapPin.addEventListener('keydown', mainMapPinActivateHandler);
