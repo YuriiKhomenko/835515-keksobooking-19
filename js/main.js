@@ -17,10 +17,13 @@ var MIN_X = 130;
 var MAX_X = 630;
 var MIN_Y = 130;
 var MAX_Y = 630;
-var PIN_WIDTH = 62;
-var PIN_HEIGHT = 84;
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
+var MAIN_PIN_WIDTH = 65;
+var MAIN_PIN_HEIGHT = 65 + 7;
 var LEFT_MOUSE_BUTTON = 0;
 var ENTER_KEY = 'Enter';
+
 var pinList = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
@@ -28,7 +31,23 @@ var map = document.querySelector('.map');
 var housingAdvertisementForm = document.querySelector('.ad-form');
 var mapFiltersForm = document.querySelector('.map__filters');
 var mainMapPin = document.querySelector('.map__pin--main');
+var addressInput = housingAdvertisementForm.querySelector('#address');
+var roomNumberSelect = housingAdvertisementForm.querySelector('#room_number');
+var guestNumberSelect = housingAdvertisementForm.querySelector('#capacity');
 
+housingAdvertisementForm.addEventListener('change', function () {
+  var roomNumber = parseInt(roomNumberSelect[roomNumberSelect.selectedIndex].value, 10);
+  var guestsNumber = parseInt(guestNumberSelect[guestNumberSelect.selectedIndex].value, 10);
+  if (roomNumber === 100 && guestsNumber !== 0) {
+    guestNumberSelect.setCustomValidity('100 комнат не для гостей');
+  } else if (guestsNumber === 0 && roomNumber !== 100) {
+    guestNumberSelect.setCustomValidity('Если вариант не 100 комнат, то нужно выбрать количество гостей, которое не превышает количество комнат');
+  } else if (roomNumber < guestsNumber) {
+    guestNumberSelect.setCustomValidity('Количество гостей не может превышать количество комнат');
+  } else {
+    guestNumberSelect.setCustomValidity('');
+  }
+});
 
 var getRandomElementFromArray = function (array) {
   return array[Math.round(Math.random() * (array.length - 1))];
@@ -58,6 +77,13 @@ var disableFormElements = function (form, value) {
   }
 };
 
+var getMainPinPostion = function () {
+  var mainPinPositionX = parseInt(mainMapPin.style.left.match(/(\d+)/)[0], 10);
+  var mainPinPositionY = parseInt(mainMapPin.style.top.match(/(\d+)/)[0], 10);
+  var mainPinPosition = getPinPosition(MAIN_PIN_WIDTH, MAIN_PIN_HEIGHT, mainPinPositionX, mainPinPositionY);
+  return mainPinPosition;
+};
+
 var getActiveState = function () {
   disableFormElements(housingAdvertisementForm, false);
   housingAdvertisementForm.classList.remove('ad-form--disabled');
@@ -65,7 +91,8 @@ var getActiveState = function () {
   map.classList.remove('map--faded');
   showPinsOnTheMap(pinList, similarHousingAdvertisements);
   pinList.appendChild(housingAdvertisementCard);
-  console.log('HI')
+  var mainPinPosition = getMainPinPostion();
+  addressInput.value = mainPinPosition.x + ', ' + mainPinPosition.y;
 };
 
 var getNotActiveState = function () {
@@ -184,10 +211,18 @@ var generateSimilarHousingAdvertisements = function () {
   return similarHousingAdvertisements;
 };
 
+var getPinPosition = function (pinWidth, pinHeight, xLocation, yLocation) {
+  var pinPosition = {};
+  pinPosition.x = xLocation + pinWidth / 2;
+  pinPosition.y = yLocation + pinHeight;
+  return pinPosition;
+};
+
 var createPin = function (housingAdvertisement) {
   var pin = pinTemplate.cloneNode(true);
-  pin.style.left = housingAdvertisement.offer.location.x + PIN_WIDTH / 2 + 'px';
-  pin.style.top = housingAdvertisement.offer.location.y + PIN_HEIGHT + 'px';
+  var pinPosition = getPinPosition(PIN_WIDTH, PIN_HEIGHT, housingAdvertisement.offer.location.x, housingAdvertisement.offer.location.y);
+  pin.style.left = pinPosition.x + 'px';
+  pin.style.top = pinPosition.y + 'px';
   pin.querySelector('img').src = housingAdvertisement.author.avatar;
   pin.querySelector('img').alt = housingAdvertisement.offer.title;
   return pin;
