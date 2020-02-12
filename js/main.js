@@ -41,10 +41,6 @@ var addressInput = housingAdvertisementForm.querySelector('#address');
 var roomNumberSelect = housingAdvertisementForm.querySelector('#room_number');
 var guestsNumberSelect = housingAdvertisementForm.querySelector('#capacity');
 
-housingAdvertisementForm.addEventListener('change', function () {
-  validateGuestsNumber();
-});
-
 var validateGuestsNumber = function () {
   var guestsOptionsAvailalble = ROOMS_FOR_GUESTS[roomNumberSelect.value];
   var guestsOptions = guestsNumberSelect.querySelectorAll('option');
@@ -60,6 +56,13 @@ var validateGuestsNumber = function () {
     }
   });
 };
+
+
+roomNumberSelect.addEventListener('change', function () {
+  validateGuestsNumber();
+});
+
+
 
 var getRandomElementFromArray = function (array) {
   return array[Math.round(Math.random() * (array.length - 1))];
