@@ -23,6 +23,12 @@ var MAIN_PIN_WIDTH = 65;
 var MAIN_PIN_HEIGHT = 65 + 7;
 var LEFT_MOUSE_BUTTON = 0;
 var ENTER_KEY = 'Enter';
+var ROOMS_FOR_GUESTS = {
+  '1': ['1'],
+  '2': ['2', '1'],
+  '3': ['3', '2', '1'],
+  '100': ['0']
+};
 
 var pinList = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -33,21 +39,27 @@ var mapFiltersForm = document.querySelector('.map__filters');
 var mainMapPin = document.querySelector('.map__pin--main');
 var addressInput = housingAdvertisementForm.querySelector('#address');
 var roomNumberSelect = housingAdvertisementForm.querySelector('#room_number');
-var guestNumberSelect = housingAdvertisementForm.querySelector('#capacity');
+var guestsNumberSelect = housingAdvertisementForm.querySelector('#capacity');
 
 housingAdvertisementForm.addEventListener('change', function () {
-  var roomNumber = parseInt(roomNumberSelect[roomNumberSelect.selectedIndex].value, 10);
-  var guestsNumber = parseInt(guestNumberSelect[guestNumberSelect.selectedIndex].value, 10);
-  if (roomNumber === 100 && guestsNumber !== 0) {
-    guestNumberSelect.setCustomValidity('100 комнат не для гостей');
-  } else if (guestsNumber === 0 && roomNumber !== 100) {
-    guestNumberSelect.setCustomValidity('Если вариант не 100 комнат, то нужно выбрать количество гостей, которое не превышает количество комнат');
-  } else if (roomNumber < guestsNumber) {
-    guestNumberSelect.setCustomValidity('Количество гостей не может превышать количество комнат');
-  } else {
-    guestNumberSelect.setCustomValidity('');
-  }
+  validateGuestsNumber();
 });
+
+var validateGuestsNumber = function () {
+  var guestsOptionsAvailalble = ROOMS_FOR_GUESTS[roomNumberSelect.value];
+  var guestsOptions = guestsNumberSelect.querySelectorAll('option');
+  guestsOptions.forEach(function (currentOption) {
+    currentOption.disabled = true;
+    currentOption.selected = false;
+    var index = guestsOptionsAvailalble.indexOf(currentOption.value);
+    if (index >= 0) {
+      currentOption.disabled = false;
+      if (index === 0) {
+        currentOption.selected = true;
+      }
+    }
+  });
+};
 
 var getRandomElementFromArray = function (array) {
   return array[Math.round(Math.random() * (array.length - 1))];
