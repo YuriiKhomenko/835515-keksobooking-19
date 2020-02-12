@@ -62,8 +62,6 @@ roomNumberSelect.addEventListener('change', function () {
   validateGuestsNumber();
 });
 
-
-
 var getRandomElementFromArray = function (array) {
   return array[Math.round(Math.random() * (array.length - 1))];
 };
