@@ -1,13 +1,13 @@
 'use strict';
 
 (function () {
-  var ROOMS_FOR_GUESTS = {
+  var roomsForGuests = {
     '1': ['1'],
     '2': ['2', '1'],
     '3': ['3', '2', '1'],
     '100': ['0']
   };
-  var MIN_APPARTMENT_PRICE = {
+  var minAppartmentPrice = {
     'bungalo': 0,
     'flat': 1000,
     'house': 5000,
@@ -51,7 +51,7 @@
   };
 
   var validateGuestsNumber = function () {
-    var guestsOptionsAvailalble = ROOMS_FOR_GUESTS[roomNumberSelect.value];
+    var guestsOptionsAvailalble = roomsForGuests[roomNumberSelect.value];
     var guestsOptions = guestsNumberSelect.querySelectorAll('option');
     guestsOptions.forEach(function (currentOption) {
       currentOption.disabled = true;
@@ -67,7 +67,7 @@
   };
 
   var checkMinPrice = function () {
-    var minPrice = MIN_APPARTMENT_PRICE[appartmentType.value];
+    var minPrice = minAppartmentPrice[appartmentType.value];
     appartmentPrice.min = minPrice;
     appartmentPrice.placeholder = minPrice;
   };

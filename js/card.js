@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var TYPE_OF_APPARTMENT_DICTIONARY = {
+  var typeOfAppartment = {
     palace: 'Дворец',
     flat: 'Квартира',
     house: 'Дом',
@@ -88,7 +88,7 @@
 
     card.querySelector('.popup__text--price').textContent = housingAdvertisement.offer.price + '₽/ночь';
 
-    card.querySelector('.popup__type').textContent = TYPE_OF_APPARTMENT_DICTIONARY[housingAdvertisement.offer.type];
+    card.querySelector('.popup__type').textContent = typeOfAppartment[housingAdvertisement.offer.type];
 
     var rooomName = checkRoomsNumber(housingAdvertisement);
     var guestsName = checkGuestsNumber(housingAdvertisement);
