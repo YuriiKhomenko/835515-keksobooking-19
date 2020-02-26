@@ -61,6 +61,7 @@
     window.util.isLeftMouseEvent(evt, function () {
       getActiveState();
       removeMainMapPinHandlers();
+      window.dnd.dragMainPin(addressInput);
     });
   };
 
