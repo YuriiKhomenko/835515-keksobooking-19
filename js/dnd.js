@@ -4,33 +4,30 @@
   var mapEnds = {
     'minX': -25,
     'maxX': 1160,
-    'minY': 70,
-    'maxY': 560
+    'minY': 45,
+    'maxY': 545
   };
 
-  var checkBorders = function (shiftX, shiftY) {
-    if (shiftX > mapEnds.maxX) {
-      mainPin.style.left = mapEnds.maxX + 'px';
-    } else if (shiftX < mapEnds.minX) {
-      mainPin.style.left = mapEnds.minX + 'px';
-    } else if (shiftY > mapEnds.maxY) {
-      mainPin.style.top = mapEnds.maxY + 'px';
-    } else if (shiftY < mapEnds.minY) {
-      mainPin.style.top = mapEnds.minY + 'px';
-    } else {
-      mainPin.style.left = shiftX + 'px';
-      mainPin.style.top = shiftY + 'px';
+  var checkPosition = function (currentPosition, minPosition, maxPosition) {
+    if (parseInt(currentPosition, 10) < minPosition) {
+      currentPosition = minPosition + 'px';
+    } else if (parseInt(currentPosition, 10) > maxPosition) {
+      currentPosition = maxPosition + 'px';
     }
+    return currentPosition;
   };
 
-  var dragMainPin = function (address) {
-    mainPin.addEventListener('mousedown', function (evt) {
+  var mouseDownDnDHandler = function (evt) {
+    evt.preventDefault();
+    var target = evt.currentTarget;
+    window.util.isLeftMouseEvent(evt, function () {
       var startCoords = {
         x: evt.clientX,
         y: evt.clientY
       };
 
-      var onMouseMove = function (moveEvt) {
+      var mouseMoveDnDHandler = function (moveEvt) {
+        moveEvt.preventDefault();
         var shift = {
           x: startCoords.x - moveEvt.clientX,
           y: startCoords.y - moveEvt.clientY
@@ -39,22 +36,29 @@
           x: moveEvt.clientX,
           y: moveEvt.clientY
         };
-        var shiftX = (mainPin.offsetLeft - shift.x);
-        var shiftY = (mainPin.offsetTop - shift.y);
-        checkBorders(shiftX, shiftY);
-        var mainPinPosition = window.map.getMainPinPostion();
-        address.value = mainPinPosition.x + ', ' + mainPinPosition.y;
+
+        mainPin.style.top = mainPin.offsetTop - shift.y + 'px';
+        mainPin.style.left = mainPin.offsetLeft - shift.x + 'px';
+
+        mainPin.style.left = checkPosition(target.style.left, mapEnds.minX, mapEnds.maxX);
+        mainPin.style.top = checkPosition(target.style.top, mapEnds.minY, mapEnds.maxY);
+
+        var address = window.map.getMainPinAddress();
+        window.form.setAddress(address.x, address.y);
       };
-      var onMouseUp = function () {
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
+
+      var mouseUpDnDHandler = function (upEvt) {
+        upEvt.preventDefault();
+        document.removeEventListener('mousemove', mouseMoveDnDHandler);
+        document.removeEventListener('mouseup', mouseUpDnDHandler);
       };
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
+
+      document.addEventListener('mousemove', mouseMoveDnDHandler);
+      document.addEventListener('mouseup', mouseUpDnDHandler);
     });
   };
 
   window.dnd = {
-    dragMainPin: dragMainPin
+    mouseDownDnDHandler: mouseDownDnDHandler
   };
 })();

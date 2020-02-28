@@ -1,5 +1,4 @@
 'use strict';
-
 (function () {
   var roomsForGuests = {
     '1': ['1'],
@@ -15,6 +14,7 @@
   };
 
   var housingAdvertisementForm = document.querySelector('.ad-form');
+  var addressInput = housingAdvertisementForm.querySelector('#address');
   var roomNumberSelect = housingAdvertisementForm.querySelector('#room_number');
   var guestsNumberSelect = housingAdvertisementForm.querySelector('#capacity');
   var housingAddTitle = housingAdvertisementForm.querySelector('#title');
@@ -66,6 +66,10 @@
     });
   };
 
+  var setAddress = function (x, y) {
+    addressInput.value = x + ', ' + y;
+  };
+
   var checkMinPrice = function () {
     var minPrice = minAppartmentPrice[appartmentType.value];
     appartmentPrice.min = minPrice;
@@ -101,4 +105,8 @@
       housingAddTitle.setCustomValidity('');
     }
   });
+
+  window.form = {
+    setAddress: setAddress
+  };
 })();
