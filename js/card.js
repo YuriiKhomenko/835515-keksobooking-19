@@ -1,5 +1,4 @@
 'use strict';
-
 (function () {
   var typeOfAppartment = {
     palace: 'Дворец',
@@ -7,7 +6,6 @@
     house: 'Дом',
     bungalo: 'Бунгало'
   };
-
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var pinList = document.querySelector('.map__pins');
 
@@ -52,7 +50,7 @@
     return guestsName;
   };
 
-  var fillInFeaturesList = function (featureList, housingAdvertisement) {
+  var renderFeaturesList = function (featureList, housingAdvertisement) {
     featureList.innerHTML = '';
     var features = housingAdvertisement.offer.features;
     for (var i = 0; i < features.length; i++) {
@@ -63,7 +61,7 @@
     }
   };
 
-  var displayPhotos = function (cardPhotoTemplate, housingAdvertisement, photosList) {
+  var renderPhotos = function (cardPhotoTemplate, housingAdvertisement, photosList) {
     photosList.innerHTML = '';
     var housingAdvertisementPhotos = housingAdvertisement.offer.photos;
     for (var i = 0; i < housingAdvertisementPhotos.length; i++) {
@@ -75,42 +73,30 @@
 
   var createHousingAdvertisementCard = function (housingAdvertisement) {
     var card = cardTemplate.cloneNode(true);
-
     var closeButton = card.querySelector('.popup__close');
     closeButton.addEventListener('click', function () {
       deleteHousingAdvertisementCard();
     });
     document.addEventListener('keydown', cardDeleteHandler);
-
     card.querySelector('.popup__title').textContent = housingAdvertisement.offer.title;
-
     card.querySelector('.popup__text--address').textContent = housingAdvertisement.offer.address;
-
     card.querySelector('.popup__text--price').textContent = housingAdvertisement.offer.price + '₽/ночь';
-
     card.querySelector('.popup__type').textContent = typeOfAppartment[housingAdvertisement.offer.type];
-
     var rooomName = checkRoomsNumber(housingAdvertisement);
     var guestsName = checkGuestsNumber(housingAdvertisement);
     card.querySelector('.popup__text--capacity').textContent = housingAdvertisement.offer.rooms + rooomName + ' для ' + housingAdvertisement.offer.guests + guestsName;
-
     card.querySelector('.popup__text--time').textContent = 'Заезд после ' + housingAdvertisement.offer.checkin + ', выезд до ' + housingAdvertisement.offer.checkout;
-
     var featuresList = card.querySelector('.popup__features');
-    fillInFeaturesList(featuresList, housingAdvertisement);
+    renderFeaturesList(featuresList, housingAdvertisement);
     card.querySelector('.popup__description').textContent = housingAdvertisement.offer.description;
-
     var cardPhotoTemplate = card.querySelector('.popup__photos img').cloneNode(false);
     var photosList = card.querySelector('.popup__photos');
-    displayPhotos(cardPhotoTemplate, housingAdvertisement, photosList);
-
+    renderPhotos(cardPhotoTemplate, housingAdvertisement, photosList);
     card.querySelector('.popup__avatar').src = housingAdvertisement.author.avatar;
-
-    pinList.appendChild(card);
+    pinList.append(card);
   };
 
   window.card = {
-    createHousingAdvertisementCard: createHousingAdvertisementCard,
     checkCardStatus: checkCardStatus
   };
 })();

@@ -1,9 +1,10 @@
 'use strict';
-
 (function () {
   var LEFT_MOUSE_BUTTON = 0;
   var ENTER_KEY = 'Enter';
   var ESCAPE_KEY = 'Escape';
+  var PIN_WIDTH = 50;
+  var PIN_HEIGHT = 70;
 
   var isEnterEvent = function (evt, action) {
     if (evt.key === ENTER_KEY) {
@@ -51,6 +52,8 @@
     isLeftMouseEvent: isLeftMouseEvent,
     getRandomElementFromArray: getRandomElementFromArray,
     getRandomNumber: getRandomNumber,
-    getRandomArrayFromArray: getRandomArrayFromArray
+    getRandomArrayFromArray: getRandomArrayFromArray,
+    PIN_WIDTH: PIN_WIDTH,
+    PIN_HEIGHT: PIN_HEIGHT
   };
 })();

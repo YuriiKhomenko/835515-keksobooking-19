@@ -1,10 +1,9 @@
 'use strict';
-
 (function () {
-  var MIN_X = 130;
-  var MAX_X = 630;
-  var MIN_Y = 130;
-  var MAX_Y = 630;
+  var MIN_X = 100;
+  var MAX_X = 1160;
+  var MIN_Y = 70;
+  var MAX_Y = 560;
   var TYPE_OF_APPARTMENT = ['palace', 'flat', 'house', 'bungalo'];
   var CHECKIN_TIME = ['12:00', '13:00', '14:00'];
   var CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
