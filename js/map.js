@@ -8,7 +8,6 @@
   var housingAdvertisementForm = document.querySelector('.ad-form');
   var mapFiltersForm = document.querySelector('.map__filters');
   var mainPin = document.querySelector('.map__pin--main');
-  var similarHousingAdvertisements = window.data.generateSimilarHousingAdvertisements();
 
   var disableFormElements = function (form) {
     for (var i = 0; i < form.elements.length; i++) {
@@ -23,16 +22,16 @@
   };
 
   var getMainPinAddress = function () {
-    var mainPinPositionX = parseInt(mainPin.style.left, 10);
-    var mainPinPositionY = parseInt(mainPin.style.top, 10);
-    var mainPinPosition = window.pin.getPinAddress(MAIN_PIN_WIDTH, MAIN_PIN_HEIGHT, mainPinPositionX, mainPinPositionY);
+    var mainPinPosition = {};
+    mainPinPosition.x = Math.round(parseInt(mainPin.style.left, 10) + (MAIN_PIN_WIDTH / 2));
+    mainPinPosition.y = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT);
     return mainPinPosition;
   };
 
-  var showPinsOnTheMap = function (parent, pins) {
+  var showPinsOnTheMap = function (pins) {
     for (var i = 0; i < pins.length; i++) {
       var pin = window.pin.createPin(pins[i]);
-      parent.appendChild(pin);
+      pinList.appendChild(pin);
     }
   };
 
@@ -41,7 +40,9 @@
     housingAdvertisementForm.classList.remove('ad-form--disabled');
     enableFormElements(mapFiltersForm);
     map.classList.remove('map--faded');
-    showPinsOnTheMap(pinList, similarHousingAdvertisements);
+    window.backend.download(showPinsOnTheMap, function (errorMessage) {
+      window.backend.errorHandler(pinList, errorMessage);
+    });
     var mainPinPosition = getMainPinAddress();
     window.form.setAddress(mainPinPosition.x, mainPinPosition.y);
   };

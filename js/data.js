@@ -50,7 +50,6 @@
   };
 
   window.data = {
-    generateSimilarHousingAdvertisements: generateSimilarHousingAdvertisements,
-    createHousingAdvertisement: createHousingAdvertisement
+    generateSimilarHousingAdvertisements: generateSimilarHousingAdvertisements
   };
 })();
