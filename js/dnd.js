@@ -2,8 +2,8 @@
 (function () {
   var mainPin = document.querySelector('.map__pin--main');
   var mapEnds = {
-    'minX': -25,
-    'maxX': 1160,
+    'minX': -33,
+    'maxX': 1167,
     'minY': 45,
     'maxY': 545
   };
