@@ -1,20 +1,19 @@
 'use strict';
-
 (function () {
+  var PIN_WIDTH = 50;
+  var PIN_HEIGHT = 70;
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
-  var getPinAddress = function (pinWidth, pinHeight, xLocation, yLocation) {
+  var getPinAddress = function (x, y) {
     var pinPosition = {};
-    pinPosition.x = Math.round(xLocation + pinWidth / 2);
-    pinPosition.y = Math.round(yLocation + pinHeight);
+    pinPosition.x = Math.round(x - (PIN_WIDTH / 2));
+    pinPosition.y = Math.round(y - PIN_HEIGHT);
     return pinPosition;
   };
 
   var createPin = function (housingAdvertisement) {
     var pin = pinTemplate.cloneNode(true);
-    var pinWidth = window.util.PIN_WIDTH;
-    var pinHeight = window.util.PIN_HEIGHT;
-    var pinPosition = getPinAddress(pinWidth, pinHeight, housingAdvertisement.offer.location.x, housingAdvertisement.offer.location.y);
+    var pinPosition = getPinAddress(housingAdvertisement.location.x, housingAdvertisement.location.y);
     pin.style.left = pinPosition.x + 'px';
     pin.style.top = pinPosition.y + 'px';
     pin.querySelector('img').src = housingAdvertisement.author.avatar;
@@ -31,7 +30,6 @@
   };
 
   window.pin = {
-    getPinAddress: getPinAddress,
     createPin: createPin
   };
 })();
