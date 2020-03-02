@@ -23,7 +23,7 @@
 
   var getMainPinAddress = function () {
     var mainPinPosition = {};
-    mainPinPosition.x = Math.round(parseInt(mainPin.style.left, 10) + (MAIN_PIN_WIDTH / 2));
+    mainPinPosition.x = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_WIDTH / 2);
     mainPinPosition.y = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT);
     return mainPinPosition;
   };
@@ -35,13 +35,26 @@
     }
   };
 
+  var errorHandler = function (parent, errorMessage) {
+    var node = document.createElement('div');
+    node.style =
+      'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+
+    node.textContent = errorMessage;
+    parent.append(node);
+  };
+
   var activetaApplication = function () {
     enableFormElements(housingAdvertisementForm);
     housingAdvertisementForm.classList.remove('ad-form--disabled');
     enableFormElements(mapFiltersForm);
     map.classList.remove('map--faded');
     window.backend.download(showPinsOnTheMap, function (errorMessage) {
-      window.backend.errorHandler(pinList, errorMessage);
+      errorHandler(pinList, errorMessage);
     });
     var mainPinPosition = getMainPinAddress();
     window.form.setAddress(mainPinPosition.x, mainPinPosition.y);
