@@ -2,6 +2,8 @@
 (function () {
   var MAIN_PIN_WIDTH = 65;
   var MAIN_PIN_HEIGHT = 85;
+  var MAIN_PIN_START_X = 570;
+  var MAIN_PINN_START_Y = 375;
 
   var pinList = document.querySelector('.map__pins');
   var map = document.querySelector('.map');
@@ -14,6 +16,11 @@
     mainPinPosition.x = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_WIDTH / 2);
     mainPinPosition.y = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT);
     return mainPinPosition;
+  };
+
+  var setMainPinStartPosition = function () {
+    mainPin.style.left = MAIN_PIN_START_X + 'px';
+    mainPin.style.top = MAIN_PINN_START_Y + 'px';
   };
 
   var deletePinsFromMap = function () {
@@ -88,6 +95,9 @@
 
   window.map = {
     getMainPinAddress: getMainPinAddress,
-    deletePinsFromMap: deletePinsFromMap
+    deletePinsFromMap: deletePinsFromMap,
+    setMainPinStartPosition: setMainPinStartPosition,
+    mousedownActivateHandler: mousedownActivateHandler,
+    keydownActivateHandler: keydownActivateHandler
   };
 })();

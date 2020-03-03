@@ -186,8 +186,13 @@
   var resetApplication = function () {
     housingAdvertisementForm.reset();
     window.map.deletePinsFromMap();
+    window.map.setMainPinStartPosition();
     housingAdvertisementForm.classList.add('ad-form--disabled');
     map.classList.add('map--faded');
+    var mainPin = map.querySelector('.map__pin--main');
+    mainPin.addEventListener('mousedown', window.map.mousedownActivateHandler);
+    mainPin.addEventListener('mousedown', window.dnd.mouseDownDnDHandler);
+    mainPin.addEventListener('keydown', window.map.keydownActivateHandler);
   };
 
   var successHandler = function () {
