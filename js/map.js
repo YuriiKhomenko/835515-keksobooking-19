@@ -2,6 +2,8 @@
 (function () {
   var MAIN_PIN_WIDTH = 65;
   var MAIN_PIN_HEIGHT = 85;
+  var MAIN_PIN_START_X = 570;
+  var MAIN_PINN_START_Y = 375;
 
   var pinList = document.querySelector('.map__pins');
   var map = document.querySelector('.map');
@@ -9,23 +11,26 @@
   var mapFiltersForm = document.querySelector('.map__filters');
   var mainPin = document.querySelector('.map__pin--main');
 
-  var disableFormElements = function (form) {
-    for (var i = 0; i < form.elements.length; i++) {
-      form.elements[i].disabled = true;
-    }
-  };
-
-  var enableFormElements = function (form) {
-    for (var i = 0; i < form.elements.length; i++) {
-      form.elements[i].disabled = false;
-    }
-  };
-
   var getMainPinAddress = function () {
     var mainPinPosition = {};
     mainPinPosition.x = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_WIDTH / 2);
     mainPinPosition.y = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT);
     return mainPinPosition;
+  };
+
+  var setMainPinStartPosition = function () {
+    mainPin.style.left = MAIN_PIN_START_X + 'px';
+    mainPin.style.top = MAIN_PINN_START_Y + 'px';
+  };
+
+  var deletePinsFromMap = function () {
+    var pinsListToDelete = map.querySelectorAll('.map__pin');
+    for (var i = 0; i < pinsListToDelete.length; i++) {
+      var pin = pinsListToDelete[i];
+      if (!pin.classList.contains('map__pin--main')) {
+        pin.remove();
+      }
+    }
   };
 
   var showPinsOnTheMap = function (pins) {
@@ -49,9 +54,10 @@
   };
 
   var activetaApplication = function () {
-    enableFormElements(housingAdvertisementForm);
+    window.form.enableFormElements(housingAdvertisementForm);
+    window.form.startUpChecksHandler();
     housingAdvertisementForm.classList.remove('ad-form--disabled');
-    enableFormElements(mapFiltersForm);
+    window.form.enableFormElements(mapFiltersForm);
     map.classList.remove('map--faded');
     window.backend.download(showPinsOnTheMap, function (errorMessage) {
       errorHandler(pinList, errorMessage);
@@ -61,8 +67,8 @@
   };
 
   var deactivateApplication = function () {
-    disableFormElements(housingAdvertisementForm);
-    disableFormElements(mapFiltersForm);
+    window.form.disableFormElements(housingAdvertisementForm);
+    window.form.disableFormElements(mapFiltersForm);
   };
 
   deactivateApplication();
@@ -88,6 +94,10 @@
   mainPin.addEventListener('keydown', keydownActivateHandler);
 
   window.map = {
-    getMainPinAddress: getMainPinAddress
+    getMainPinAddress: getMainPinAddress,
+    deletePinsFromMap: deletePinsFromMap,
+    setMainPinStartPosition: setMainPinStartPosition,
+    mousedownActivateHandler: mousedownActivateHandler,
+    keydownActivateHandler: keydownActivateHandler
   };
 })();
