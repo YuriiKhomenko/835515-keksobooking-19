@@ -4,12 +4,15 @@
   var MAIN_PIN_HEIGHT = 85;
   var MAIN_PIN_START_X = 570;
   var MAIN_PINN_START_Y = 375;
+  var MAX_PINS_AMOUNT = 5;
 
   var pinList = document.querySelector('.map__pins');
   var map = document.querySelector('.map');
   var housingAdvertisementForm = document.querySelector('.ad-form');
   var mapFiltersForm = document.querySelector('.map__filters');
   var mainPin = document.querySelector('.map__pin--main');
+  var housingTypeFilter = mapFiltersForm.querySelector('#housing-type');
+  var advertisements = [];
 
   var getMainPinAddress = function () {
     var mainPinPosition = {};
@@ -33,12 +36,26 @@
     }
   };
 
-  var showPinsOnTheMap = function (pins) {
-    for (var i = 0; i < pins.length; i++) {
-      var pin = window.pin.createPin(pins[i]);
+  var renderPins = function (offers) {
+    for (var i = 0; i < offers.length; i++) {
+      var pin = window.pin.createPin(offers[i]);
       pinList.appendChild(pin);
     }
   };
+
+  var checkType = function (item) {
+    var selectedHousingType = housingTypeFilter.value;
+    return (selectedHousingType === 'any') ? item.offer.type : item.offer.type === selectedHousingType;
+  };
+
+  mapFiltersForm.addEventListener('change', function () {
+    var pins = [];
+    pins = advertisements
+      .filter(checkType);
+    window.card.deleteHousingAdvertisementCard();
+    deletePinsFromMap();
+    renderPins(pins.slice(0, MAX_PINS_AMOUNT));
+  });
 
   var errorHandler = function (parent, errorMessage) {
     var node = document.createElement('div');
@@ -57,9 +74,12 @@
     window.form.enableFormElements(housingAdvertisementForm);
     window.form.startUpChecksHandler();
     housingAdvertisementForm.classList.remove('ad-form--disabled');
-    window.form.enableFormElements(mapFiltersForm);
     map.classList.remove('map--faded');
-    window.backend.download(showPinsOnTheMap, function (errorMessage) {
+    window.backend.download(function (data) {
+      window.form.enableFormElements(mapFiltersForm);
+      advertisements = data;
+      renderPins(advertisements.slice(0, MAX_PINS_AMOUNT));
+    }, function (errorMessage) {
       errorHandler(pinList, errorMessage);
     });
     var mainPinPosition = getMainPinAddress();
