@@ -10,7 +10,6 @@
   var housingAdvertisementForm = document.querySelector('.ad-form');
   var mapFiltersForm = document.querySelector('.map__filters');
   var mainPin = document.querySelector('.map__pin--main');
-  var advertisements = [];
 
   var getMainPinAddress = function () {
     var mainPinPosition = {};
@@ -23,14 +22,6 @@
     mainPin.style.left = MAIN_PIN_START_X + 'px';
     mainPin.style.top = MAIN_PINN_START_Y + 'px';
   };
-
-  mapFiltersForm.addEventListener('change', function () {
-    var newPins = advertisements
-      .filter(window.filter.getHousingType);
-    window.card.deleteHousingAdvertisementCard();
-    window.pin.deletePins();
-    window.pin.renderPins(newPins);
-  });
 
   var errorHandler = function (parent, errorMessage) {
     var node = document.createElement('div');
@@ -52,8 +43,8 @@
     map.classList.remove('map--faded');
     window.backend.download(function (data) {
       window.form.enableFormElements(mapFiltersForm);
-      advertisements = data;
-      window.pin.renderPins(advertisements);
+      window.map.advertisements = data;
+      window.pin.renderPins(data);
     }, function (errorMessage) {
       errorHandler(pinList, errorMessage);
     });
