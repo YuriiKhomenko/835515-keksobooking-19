@@ -4,14 +4,12 @@
   var MAIN_PIN_HEIGHT = 85;
   var MAIN_PIN_START_X = 570;
   var MAIN_PINN_START_Y = 375;
-  var MAX_PINS_AMOUNT = 5;
 
   var pinList = document.querySelector('.map__pins');
   var map = document.querySelector('.map');
   var housingAdvertisementForm = document.querySelector('.ad-form');
   var mapFiltersForm = document.querySelector('.map__filters');
   var mainPin = document.querySelector('.map__pin--main');
-  var housingTypeFilter = mapFiltersForm.querySelector('#housing-type');
   var advertisements = [];
 
   var getMainPinAddress = function () {
@@ -26,35 +24,12 @@
     mainPin.style.top = MAIN_PINN_START_Y + 'px';
   };
 
-  var deletePinsFromMap = function () {
-    var pinsListToDelete = map.querySelectorAll('.map__pin');
-    for (var i = 0; i < pinsListToDelete.length; i++) {
-      var pin = pinsListToDelete[i];
-      if (!pin.classList.contains('map__pin--main')) {
-        pin.remove();
-      }
-    }
-  };
-
-  var renderPins = function (offers) {
-    for (var i = 0; i < offers.length; i++) {
-      var pin = window.pin.createPin(offers[i]);
-      pinList.appendChild(pin);
-    }
-  };
-
-  var checkType = function (item) {
-    var selectedHousingType = housingTypeFilter.value;
-    return (selectedHousingType === 'any') ? item.offer.type : item.offer.type === selectedHousingType;
-  };
-
   mapFiltersForm.addEventListener('change', function () {
-    var pins = [];
-    pins = advertisements
-      .filter(checkType);
+    var newPins = advertisements
+      .filter(window.filter.getHousingType);
     window.card.deleteHousingAdvertisementCard();
-    deletePinsFromMap();
-    renderPins(pins.slice(0, MAX_PINS_AMOUNT));
+    window.pin.deletePins();
+    window.pin.renderPins(newPins);
   });
 
   var errorHandler = function (parent, errorMessage) {
@@ -78,7 +53,7 @@
     window.backend.download(function (data) {
       window.form.enableFormElements(mapFiltersForm);
       advertisements = data;
-      renderPins(advertisements.slice(0, MAX_PINS_AMOUNT));
+      window.pin.renderPins(advertisements);
     }, function (errorMessage) {
       errorHandler(pinList, errorMessage);
     });
@@ -115,7 +90,6 @@
 
   window.map = {
     getMainPinAddress: getMainPinAddress,
-    deletePinsFromMap: deletePinsFromMap,
     setMainPinStartPosition: setMainPinStartPosition,
     mousedownActivateHandler: mousedownActivateHandler,
     keydownActivateHandler: keydownActivateHandler
