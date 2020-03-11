@@ -23,23 +23,6 @@
     mainPin.style.top = MAIN_PINN_START_Y + 'px';
   };
 
-  var deletePinsFromMap = function () {
-    var pinsListToDelete = map.querySelectorAll('.map__pin');
-    for (var i = 0; i < pinsListToDelete.length; i++) {
-      var pin = pinsListToDelete[i];
-      if (!pin.classList.contains('map__pin--main')) {
-        pin.remove();
-      }
-    }
-  };
-
-  var showPinsOnTheMap = function (pins) {
-    for (var i = 0; i < pins.length; i++) {
-      var pin = window.pin.createPin(pins[i]);
-      pinList.appendChild(pin);
-    }
-  };
-
   var errorHandler = function (parent, errorMessage) {
     var node = document.createElement('div');
     node.style =
@@ -57,9 +40,12 @@
     window.form.enableFormElements(housingAdvertisementForm);
     window.form.startUpChecksHandler();
     housingAdvertisementForm.classList.remove('ad-form--disabled');
-    window.form.enableFormElements(mapFiltersForm);
     map.classList.remove('map--faded');
-    window.backend.download(showPinsOnTheMap, function (errorMessage) {
+    window.backend.download(function (data) {
+      window.form.enableFormElements(mapFiltersForm);
+      window.map.advertisements = data;
+      window.pin.renderPins(data);
+    }, function (errorMessage) {
       errorHandler(pinList, errorMessage);
     });
     var mainPinPosition = getMainPinAddress();
@@ -95,7 +81,6 @@
 
   window.map = {
     getMainPinAddress: getMainPinAddress,
-    deletePinsFromMap: deletePinsFromMap,
     setMainPinStartPosition: setMainPinStartPosition,
     mousedownActivateHandler: mousedownActivateHandler,
     keydownActivateHandler: keydownActivateHandler

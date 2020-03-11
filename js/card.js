@@ -97,6 +97,7 @@
   };
 
   window.card = {
-    checkCardStatus: checkCardStatus
+    checkCardStatus: checkCardStatus,
+    deleteHousingAdvertisementCard: deleteHousingAdvertisementCard
   };
 })();

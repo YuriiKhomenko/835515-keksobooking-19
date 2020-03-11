@@ -185,7 +185,7 @@
 
   var resetApplication = function () {
     housingAdvertisementForm.reset();
-    window.map.deletePinsFromMap();
+    window.pin.deletePins();
     window.map.setMainPinStartPosition();
     housingAdvertisementForm.classList.add('ad-form--disabled');
     map.classList.add('map--faded');
