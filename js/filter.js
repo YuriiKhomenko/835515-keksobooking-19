@@ -5,41 +5,41 @@
   var housingPriceFilter = mapFiltersForm.querySelector('#housing-price');
   var housingRoomsFilter = mapFiltersForm.querySelector('#housing-rooms');
   var housingGuestsFilter = mapFiltersForm.querySelector('#housing-guests');
-  var priceDictionary = {
-    'low': 10000,
-    'high': 50000
+  var PriceDictionary = {
+    LOW: 10000,
+    HIGH: 50000
   };
 
   var getHousingType = function (item) {
-    var selectedHousingType = housingTypeFilter.value;
-    return (selectedHousingType === 'any') ? item.offer.type : item.offer.type === selectedHousingType;
+    return (housingTypeFilter.value === 'any') ? item.offer.type : item.offer.type === housingTypeFilter.value;
   };
 
   var getRoomsNumber = function (item) {
-    var selectedRoomsNumer = housingRoomsFilter.value;
-    return (selectedRoomsNumer === 'any') ? item.offer.rooms.toString() : item.offer.rooms.toString() === selectedRoomsNumer;
+    return (housingRoomsFilter.value === 'any') ? item.offer.rooms.toString() : item.offer.rooms.toString() === housingRoomsFilter.value;
   };
 
   var getGuestsNumber = function (item) {
-    var selectedGuestsNumer = housingGuestsFilter.value;
-    return (selectedGuestsNumer === 'any') ? item.offer.guests.toString() : item.offer.guests.toString() === selectedGuestsNumer;
+    return (housingGuestsFilter.value === 'any') ? item.offer.guests.toString() : item.offer.guests.toString() === housingGuestsFilter.value;
   };
 
   var connvertPriceToWords = function (price) {
     var result = '';
-    if (price < priceDictionary.low) {
-      result = 'low';
-    } else if (price > priceDictionary.low && price < priceDictionary.high) {
-      result = 'middle';
-    } else {
-      result = 'high';
+    switch (true) {
+      case price < PriceDictionary.LOW:
+        result = 'low';
+        break;
+      case price > PriceDictionary.LOW && price < PriceDictionary.HIGH:
+        result = 'middle';
+        break;
+      case price > PriceDictionary.HIGH:
+        result = 'high';
+        break;
     }
     return result;
   };
 
   var getPrice = function (item) {
-    var selectedPrice = housingPriceFilter.value;
-    return (selectedPrice === 'any') ? item.offer.price : connvertPriceToWords(item.offer.price) === selectedPrice;
+    return (housingPriceFilter.value === 'any') ? item.offer.price : connvertPriceToWords(item.offer.price) === housingPriceFilter.value;
   };
 
   var checkFeature = function (item) {
@@ -49,13 +49,20 @@
     });
   };
 
+  var applyMapFilters = function (data) {
+    return data.filter(function (item) {
+      return (
+        getHousingType(item) &&
+        getPrice(item) &&
+        getRoomsNumber(item) &&
+        getGuestsNumber(item) &&
+        checkFeature(item)
+      );
+    });
+  };
+
   mapFiltersForm.addEventListener('change', window.debounce(function () {
-    var newPins = window.map.advertisements
-      .filter(getHousingType)
-      .filter(getPrice)
-      .filter(getRoomsNumber)
-      .filter(getGuestsNumber)
-      .filter(checkFeature);
+    var newPins = applyMapFilters(window.map.advertisements);
     window.card.deleteHousingAdvertisementCard();
     window.pin.deletePins();
     window.pin.renderPins(newPins);
