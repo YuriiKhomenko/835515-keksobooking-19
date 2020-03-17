@@ -20,11 +20,11 @@
     pin.querySelector('img').src = housingAdvertisement.author.avatar;
     pin.querySelector('img').alt = housingAdvertisement.offer.title;
     pin.addEventListener('click', function () {
-      window.card.checkCardStatus(housingAdvertisement);
+      window.card.checkStatus(housingAdvertisement);
     });
     pin.addEventListener('keydown', function (evt) {
       window.util.isEnterEvent(evt, function () {
-        window.card.checkCardStatus(housingAdvertisement);
+        window.card.checkStatus(housingAdvertisement);
       });
     });
     return pin;
@@ -44,12 +44,11 @@
 
   var deletePins = function () {
     var pinsListToDelete = document.querySelectorAll('.map__pin');
-    for (var i = 0; i < pinsListToDelete.length; i++) {
-      var pin = pinsListToDelete[i];
+    pinsListToDelete.forEach(function (pin) {
       if (!pin.classList.contains('map__pin--main')) {
         pin.remove();
       }
-    }
+    });
   };
 
   window.pin = {

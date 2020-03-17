@@ -63,7 +63,7 @@
 
   mapFiltersForm.addEventListener('change', window.debounce(function () {
     var newPins = applyMapFilters(window.map.advertisements);
-    window.card.deleteHousingAdvertisementCard();
+    window.card.deleteHousingAdvertisement();
     window.pin.deletePins();
     window.pin.renderPins(newPins);
   }));

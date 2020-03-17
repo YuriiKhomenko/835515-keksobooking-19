@@ -53,22 +53,22 @@
   var renderFeaturesList = function (featureList, housingAdvertisement) {
     featureList.innerHTML = '';
     var features = housingAdvertisement.offer.features;
-    for (var i = 0; i < features.length; i++) {
+    features.forEach(function (feature) {
       var featureListItem = document.createElement('li');
       featureListItem.classList.add('popup__feature');
-      featureListItem.classList.add('popup__feature--' + features[i]);
+      featureListItem.classList.add('popup__feature--' + feature);
       featureList.appendChild(featureListItem);
-    }
+    });
   };
 
   var renderPhotos = function (cardPhotoTemplate, housingAdvertisement, photosList) {
     photosList.innerHTML = '';
     var housingAdvertisementPhotos = housingAdvertisement.offer.photos;
-    for (var i = 0; i < housingAdvertisementPhotos.length; i++) {
+    housingAdvertisementPhotos.forEach(function (photo) {
       var cardImage = cardPhotoTemplate.cloneNode(false);
-      cardImage.src = housingAdvertisementPhotos[i];
+      cardImage.src = photo;
       photosList.appendChild(cardImage);
-    }
+    });
   };
 
   var createHousingAdvertisementCard = function (housingAdvertisement) {
@@ -97,7 +97,7 @@
   };
 
   window.card = {
-    checkCardStatus: checkCardStatus,
-    deleteHousingAdvertisementCard: deleteHousingAdvertisementCard
+    checkStatus: checkCardStatus,
+    deleteHousingAdvertisement: deleteHousingAdvertisementCard
   };
 })();

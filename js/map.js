@@ -37,12 +37,12 @@
   };
 
   var activetaApplication = function () {
-    window.form.enableFormElements(housingAdvertisementForm);
+    window.form.enableElements(housingAdvertisementForm);
     window.form.startUpChecksHandler();
     housingAdvertisementForm.classList.remove('ad-form--disabled');
     map.classList.remove('map--faded');
     window.backend.download(function (data) {
-      window.form.enableFormElements(mapFiltersForm);
+      window.form.enableElements(mapFiltersForm);
       window.map.advertisements = data;
       window.pin.renderPins(data);
     }, function (errorMessage) {
@@ -53,8 +53,8 @@
   };
 
   var deactivateApplication = function () {
-    window.form.disableFormElements(housingAdvertisementForm);
-    window.form.disableFormElements(mapFiltersForm);
+    window.form.disableElements(housingAdvertisementForm);
+    window.form.disableElements(mapFiltersForm);
   };
 
   deactivateApplication();
@@ -76,13 +76,14 @@
   };
 
   mainPin.addEventListener('mousedown', mousedownActivateHandler);
-  mainPin.addEventListener('mousedown', window.dnd.mouseDownDnDHandler);
+  mainPin.addEventListener('mousedown', window.dnd.mouseDownHandler);
   mainPin.addEventListener('keydown', keydownActivateHandler);
 
   window.map = {
     getMainPinAddress: getMainPinAddress,
     setMainPinStartPosition: setMainPinStartPosition,
     mousedownActivateHandler: mousedownActivateHandler,
-    keydownActivateHandler: keydownActivateHandler
+    keydownActivateHandler: keydownActivateHandler,
+    deactivateApplication: deactivateApplication
   };
 })();

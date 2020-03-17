@@ -1,11 +1,11 @@
 'use strict';
 (function () {
   var mainPin = document.querySelector('.map__pin--main');
-  var mapEnds = {
-    'minX': -33,
-    'maxX': 1167,
-    'minY': 45,
-    'maxY': 545
+  var MapEnds = {
+    'MIN_X': -33,
+    'MAX_X': 1167,
+    'MIN_Y': 45,
+    'MAX_Y': 545
   };
 
   var checkPosition = function (currentPosition, minPosition, maxPosition) {
@@ -40,8 +40,8 @@
         mainPin.style.top = mainPin.offsetTop - shift.y + 'px';
         mainPin.style.left = mainPin.offsetLeft - shift.x + 'px';
 
-        mainPin.style.left = checkPosition(target.style.left, mapEnds.minX, mapEnds.maxX);
-        mainPin.style.top = checkPosition(target.style.top, mapEnds.minY, mapEnds.maxY);
+        mainPin.style.left = checkPosition(target.style.left, MapEnds.MIN_X, MapEnds.MAX_X);
+        mainPin.style.top = checkPosition(target.style.top, MapEnds.MIN_Y, MapEnds.MAX_Y);
 
         var address = window.map.getMainPinAddress();
         window.form.setAddress(address.x, address.y);
@@ -59,6 +59,6 @@
   };
 
   window.dnd = {
-    mouseDownDnDHandler: mouseDownDnDHandler
+    mouseDownHandler: mouseDownDnDHandler
   };
 })();

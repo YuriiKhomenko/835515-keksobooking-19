@@ -55,15 +55,17 @@
   };
 
   var disableFormElements = function (form) {
-    for (var i = 0; i < form.elements.length; i++) {
-      form.elements[i].disabled = true;
-    }
+    var elements = Array.prototype.slice.call(form.elements, 0);
+    elements.forEach(function (element) {
+      element.disabled = true;
+    });
   };
 
   var enableFormElements = function (form) {
-    for (var i = 0; i < form.elements.length; i++) {
-      form.elements[i].disabled = false;
-    }
+    var elements = Array.prototype.slice.call(form.elements, 0);
+    elements.forEach(function (element) {
+      element.disabled = false;
+    });
   };
 
   var validateGuestsNumber = function () {
@@ -148,8 +150,6 @@
 
   resetButton.addEventListener('click', function () {
     housingAdvertisementForm.reset();
-    window.avatar.setDefaultAvatar();
-    window.avatar.setDefaultPhoto();
     setMinPrice();
     resetApplication();
   });
@@ -188,6 +188,8 @@
 
   var resetApplication = function () {
     housingAdvertisementForm.reset();
+    window.card.deleteHousingAdvertisement();
+    window.map.deactivateApplication();
     window.pin.deletePins();
     window.map.setMainPinStartPosition();
     housingAdvertisementForm.classList.add('ad-form--disabled');
@@ -196,7 +198,7 @@
     window.avatar.setDefaultAvatar();
     window.avatar.setDefaultPhoto();
     mainPin.addEventListener('mousedown', window.map.mousedownActivateHandler);
-    mainPin.addEventListener('mousedown', window.dnd.mouseDownDnDHandler);
+    mainPin.addEventListener('mousedown', window.dnd.mouseDownHandler);
     mainPin.addEventListener('keydown', window.map.keydownActivateHandler);
   };
 
@@ -226,8 +228,8 @@
   });
 
   window.form = {
-    disableFormElements: disableFormElements,
-    enableFormElements: enableFormElements,
+    disableElements: disableFormElements,
+    enableElements: enableFormElements,
     setAddress: setAddress,
     checkPrice: checkPrice,
     startUpChecksHandler: startUpChecksHandler
